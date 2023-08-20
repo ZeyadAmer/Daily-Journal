@@ -1,0 +1,31 @@
+<%- include ("partials/header.ejs"); %>
+
+<h1>Compose</h1>
+
+<form action="/compose" method="post">
+  <div class="form-group">
+    <label>Title</label>
+    <input
+      class="form-control"
+      type="text"
+      name="postTitle"
+      id="postTitle"
+      placeholder="What's on your mind?"
+      class="search"
+    />
+  </div>
+  <div class="form-group">
+    <label>Post</label>
+    <textarea
+      class="form-control"
+      name="postBody"
+      rows="8"
+      cols="120"
+    ></textarea>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary" type="submit">Publish</button>
+    <div class="imae"></div>
+  </div>
+</form>
+<%- include ("partials/footer.ejs"); %>
