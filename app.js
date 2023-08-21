@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import lodash from "lodash";
 import ejs from "ejs";
 
 const app = express(); //this means we call the listen of deploying on app this is our server line
@@ -36,6 +37,21 @@ app.get("/contact", (req, res) => {
 
 app.get("/compose", (req, res) => {
   res.render("compose.ejs");
+});
+
+app.get("/posts/:number", (req, res) => {
+  posts.forEach((post) => {
+    console.log(
+      lodash.lowerCase(req.params.number) +
+        "    " +
+        lodash.lowerCase(post.Title)
+    );
+
+    if (lodash.lowerCase(req.params.number) === lodash.lowerCase(post.Title)) {
+      console.log("match found!!!.");
+      res.render("post.ejs", { Title: post.Title, Body: post.Body });
+    } else console.log("not found");
+  });
 });
 
 app.post("/compose", (req, res) => {
