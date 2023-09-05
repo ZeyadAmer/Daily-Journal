@@ -1,10 +1,21 @@
-import express from "express";
-import bodyParser from "body-parser";
-import lodash from "lodash";
-import ejs from "ejs";
+const express = require("express");
+require("dotenv").config();
+const bodyParser = require("body-parser");
+const lodash = require("lodash");
+const { default: mongoose } = require("mongoose");
 
 const app = express(); //this means we call the listen of deploying on app this is our server line
 const port = 3000; // this is the port number we run on we made a variable to avoid mistaking the number if used more than once
+
+mongoose.connect(process.env.mon);
+
+const postSchema = {
+  title: String,
+
+  content: String,
+};
+
+const Post = mongoose.model("Post", postSchema);
 
 const homeStartingContent =
   "This is where you can store your private inner thoughts without worrying that your journal gets stolen or someone invades your privacy and starts reading it";
@@ -18,9 +29,9 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const posts = [];
+app.get("/", async (req, res) => {
+  const posts = await Post.find({});
 
-app.get("/", (req, res) => {
   res.render("home.ejs", {
     homeStartingContent: homeStartingContent,
     posts: posts,
@@ -39,28 +50,18 @@ app.get("/compose", (req, res) => {
   res.render("compose.ejs");
 });
 
-app.get("/posts/:number", (req, res) => {
-  posts.forEach((post) => {
-    console.log(
-      lodash.lowerCase(req.params.number) +
-        "    " +
-        lodash.lowerCase(post.Title)
-    );
-
-    if (lodash.lowerCase(req.params.number) === lodash.lowerCase(post.Title)) {
-      console.log("match found!!!.");
-      res.render("post.ejs", { Title: post.Title, Body: post.Body });
-    } else console.log("not found");
-  });
+app.get("/posts/:postId", async (req, res) => {
+  const id = req.params.postId;
+  const post = await Post.findById(id);
+  res.render("post.ejs", { Title: post.title, Body: post.content });
 });
 
-app.post("/compose", (req, res) => {
+app.post("/compose", async (req, res) => {
   res.render("compose.ejs");
-  var post = {
-    Title: req.body.postTitle,
-    Body: req.body.postBody,
-  };
-  posts.push(post);
+  const post = await Post.create({
+    title: req.body.postTitle,
+    content: req.body.postBody,
+  });
 });
 
 app.listen(port, () => {

@@ -16,13 +16,13 @@
           text-align: left;
         "
       >
-        <h1><%= post.Title %></h1>
+        <h1><%= post.title %></h1>
       </span>
       <p>
         <span class="date" style="text-align: left">
-          <%= post.Body.substring(0,100) + "..." %>
+          <%= post.content.substring(0,100) + "..." %>
         </span>
-        <a href="/posts/<%=post.Title%>">Read More</a>
+        <a href="/posts/<%=post._id%>">Read More</a>
       </p>
     </div>
   </li>
